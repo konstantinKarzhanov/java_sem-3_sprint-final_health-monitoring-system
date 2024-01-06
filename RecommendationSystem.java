@@ -15,6 +15,7 @@ public class RecommendationSystem {
 
         // Analyze heart rate
         int heartRate = healthData.getHeartRate();
+
         if (heartRate < HEART_RATE_ARR[0]) {
             recommendationArr.add(
                 "Your heart rate is lower than the recommended range. " +
@@ -36,6 +37,7 @@ public class RecommendationSystem {
 
         // Analyze steps
         int steps = healthData.getSteps();
+
         if (steps < MIN_STEPS) {
             recommendationArr.add(
                 "You're not reaching the recommended daily step count. " +
@@ -50,6 +52,7 @@ public class RecommendationSystem {
 
         // Analize BMI (Body Mass Index)
         double bmi = healthData.getWeight() / Math.pow(healthData.getHeight(), 2);
+        
         if (bmi < BMI_ARR[0]) {
             recommendationArr.add(
                 "Being underweight can impact your health. " + 
