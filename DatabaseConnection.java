@@ -11,14 +11,14 @@ public class DatabaseConnection {
     private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
     // Define method to reuse connection
-    public static Connection useConnection(){
+    public static Connection useConnection() {
         Connection dbConnection = null;
         
-        try{
+        try {
             // use Postgres Driver
             // Class.forName("org.postgresql.Driver"); // in this case need to catch "ClassNotFoundException" as well
             dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException  e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         
