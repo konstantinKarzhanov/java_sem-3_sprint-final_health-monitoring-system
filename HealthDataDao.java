@@ -52,7 +52,7 @@ public class HealthDataDao {
         // Prepare the SQL query
         String query = "SELECT * FROM health_data WHERE id = ?;";
 
-        // Database logic to insert data using Prepared Statement
+        // Database logic to get data using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -88,7 +88,7 @@ public class HealthDataDao {
         // Prepare the SQL query
         String query = "SELECT * FROM health_data WHERE user_id = ?;";
 
-        // Database logic to get update user Using Prepared Statement
+        // Database logic to get health_data by user's id using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -122,7 +122,7 @@ public class HealthDataDao {
         String selectIdQuery = "SELECT id FROM users WHERE first_name = ? AND last_name = ?";
         String query = String.format("UPDATE health_data SET user_id = (%s), weight = ?, height = ?, steps = ?, heart_rate = ?, date = ? WHERE id = ?;", selectIdQuery);
 
-        // Database logic to get update user Using Prepared Statement
+        // Database logic to update health_data by id using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -153,7 +153,7 @@ public class HealthDataDao {
         // Prepare the SQL query
         String query = "DELETE FROM health_data WHERE id = ?;";
 
-        // Database logic to get update user Using Prepared Statement
+        // Database logic to delete health_data by id using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);

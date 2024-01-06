@@ -52,7 +52,7 @@ public class MedicineReminderDao {
         // Prepare the SQL query
         String query = "SELECT * FROM medicine_reminders WHERE id = ?;";
 
-        // Database logic to insert data using Prepared Statement
+        // Database logic to get data using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -77,7 +77,7 @@ public class MedicineReminderDao {
         return new MedicineReminder(medicineName, dosage, schedule, startDate, endDate);
     }
 
-    // Define method to get user's reminders from the database by user id
+    // Define method to get reminders from the database by user id
     public List<MedicineReminder> getRemindersByUserId(int userId) {
         String medicineName = null;
         String dosage = null;
@@ -89,7 +89,7 @@ public class MedicineReminderDao {
         // Prepare the SQL query
         String query = "SELECT * FROM medicine_reminders WHERE user_id = ?;";
 
-        // Database logic to insert data using Prepared Statement
+        // Database logic to get data using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -128,7 +128,7 @@ public class MedicineReminderDao {
         String selectIdQuery = "SELECT id FROM users WHERE first_name = ? AND last_name = ?";
         String query = String.format("SELECT * FROM medicine_reminders WHERE user_id = (%s);", selectIdQuery);
 
-        // Database logic to insert data using Prepared Statement
+        // Database logic to get data using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -156,7 +156,7 @@ public class MedicineReminderDao {
         return reminderArr;
     }
 
-    // Define method to get user's DUE reminders from the database
+    // Define method to get DUE reminders from the database by user id
     public List<MedicineReminder> getDueReminders(int userId) {
         List<MedicineReminder> dueReminderArr = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
@@ -172,7 +172,7 @@ public class MedicineReminderDao {
         return dueReminderArr;
     }
 
-    // Define method to get user's DUE reminders from the database
+    // Define method to get DUE reminders from the database by user
     public List<MedicineReminder> getDueReminders(User user) {
         List<MedicineReminder> dueReminderArr = new ArrayList<>();
         LocalDate currentDate = LocalDate.now();
@@ -196,7 +196,7 @@ public class MedicineReminderDao {
         String selectIdQuery = "SELECT id FROM users WHERE first_name = ? AND last_name = ?";
         String query = String.format("UPDATE medicine_reminders SET user_id = (%s), medicine_name = ?, dosage = ?, schedule = ?, start_date = ?, end_date = ? WHERE id = ?;", selectIdQuery);
 
-        // Database logic to insert data using Prepared Statement
+        // Database logic to update medicine_reminders data using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -227,7 +227,7 @@ public class MedicineReminderDao {
         // Prepare the SQL query
         String query = "DELETE FROM medicine_reminders WHERE id = ?;";
 
-        // Database logic to insert data using Prepared Statement
+        // Database logic to delete data using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();    
                 PreparedStatement statement = dbConnection.prepareStatement(query);

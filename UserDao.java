@@ -53,7 +53,7 @@ public class UserDao {
         // Prepare the SQL query
         String query = "SELECT * FROM users WHERE id = ?;";
 
-        // Database logic to get data by ID Using Prepared Statement        
+        // Database logic to get data by ID using Prepared Statement        
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -92,7 +92,7 @@ public class UserDao {
         // Prepare the SQL query
         String query = "SELECT * FROM users WHERE email = ?;";
 
-        // Database logic to get data by ID Using Prepared Statement
+        // Database logic to get data by email using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -122,14 +122,12 @@ public class UserDao {
     public boolean updateUser(int id, User user) {
         boolean flag = false;
 
-        System.out.println(user.getPassword());
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        System.out.println(hashedPassword);
 
         // Prepare the SQL query
         String query = "UPDATE users SET first_name = ?, last_name = ?, birth_date = ?, gender = ?, email = ?, password = ?, is_doctor = ? WHERE id = ?;";
         
-        // Database logic to get update user Using Prepared Statement
+        // Database logic to update user using Prepared Statement
         try (
                 Connection dbConnection = DatabaseConnection.useConnection();
                 PreparedStatement statement = dbConnection.prepareStatement(query);
@@ -228,6 +226,7 @@ public class UserDao {
             System.out.println(e.getMessage());
         }
 
+        // Check if password is correct and return true/false
         return BCrypt.checkpw(password, hashedPassword);
     }
 }

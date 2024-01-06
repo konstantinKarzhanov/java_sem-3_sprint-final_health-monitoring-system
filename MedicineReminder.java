@@ -3,6 +3,7 @@ import java.time.LocalDate;
 
 // Define class
 public class MedicineReminder {
+    // Define attributes
     private String medicineName;
     private String dosage;
     private String schedule;
