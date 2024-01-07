@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
+// import custom packages
+import config.DatabaseConnection;
+
 // Define class
 public class DoctorPortalDao {
     // Define attributes

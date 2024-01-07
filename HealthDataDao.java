@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
+// import custom packages
+import config.DatabaseConnection;
+
 // Define class
 public class HealthDataDao {
     // Define method to insert user's health data into the database 

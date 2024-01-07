@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+// import custom packages
+import config.DatabaseConnection;
+
 // Define class
 public class RecommendationDao {
     // Define method to create recommendation in the database
