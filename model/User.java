@@ -1,3 +1,5 @@
+package model;
+
 // Import required packages
 import java.time.LocalDate;
 

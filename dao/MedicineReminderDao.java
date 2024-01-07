@@ -1,3 +1,5 @@
+package dao;
+
 // Import required packages
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 
 // import custom packages
 import config.DatabaseConnection;
+import model.User;
+import model.MedicineReminder;
 
 // Define class
 public class MedicineReminderDao {

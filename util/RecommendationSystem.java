@@ -1,6 +1,11 @@
+package util;
+
 // Import required packages
 import java.util.List;
 import java.util.ArrayList;
+
+// import custom packages
+import model.HealthData;
 
 // Define class
 public class RecommendationSystem {

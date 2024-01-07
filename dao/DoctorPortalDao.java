@@ -1,3 +1,5 @@
+package dao;
+
 // Import required packages
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +10,9 @@ import java.util.ArrayList;
 
 // import custom packages
 import config.DatabaseConnection;
+import model.User;
+import model.Doctor;
+import model.HealthData;
 
 // Define class
 public class DoctorPortalDao {

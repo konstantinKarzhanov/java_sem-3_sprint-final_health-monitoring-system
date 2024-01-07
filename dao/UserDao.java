@@ -1,3 +1,5 @@
+package dao;
+
 // Import external packages
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 
 // import custom packages
 import config.DatabaseConnection;
+import model.User;
 
 // Define class
 public class UserDao {

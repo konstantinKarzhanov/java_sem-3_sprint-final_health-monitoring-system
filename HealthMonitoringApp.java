@@ -4,6 +4,11 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+// Import custom packages
+import dao.*;
+import model.*;
+import util.RecommendationSystem;
+
 // Define class
 public class HealthMonitoringApp {
     private static UserDao uDAO = new UserDao();
