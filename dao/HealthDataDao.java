@@ -2,13 +2,13 @@ package dao;
 
 // Import required packages
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.sql.SQLException;
 
 // import custom packages
 import config.DatabaseConnection;
@@ -18,7 +18,7 @@ import model.HealthData;
 // Define class
 public class HealthDataDao {
     // Define method to insert user's health data into the database 
-    public boolean createHealthData(User user, HealthData healthData) { 
+    public static boolean createHealthData(User user, HealthData healthData) { 
         boolean flag = false;
 
         // Prepare the SQL query
@@ -49,7 +49,7 @@ public class HealthDataDao {
     }
 
     // Define method to get health data from the database by id
-    public HealthData getHealthDataById(int id) {
+    public static HealthData getHealthDataById(int id) {
         double weight = 0;
         double height = 0;
         int steps = 0;
@@ -84,13 +84,13 @@ public class HealthDataDao {
     }
   
     // Define method to get user's health data from the database by user id
-    public List<HealthData> getHealthDataByUserId(int userId) { 
+    public static List<HealthData> getHealthDataByUserId(int userId) { 
         double weight = 0;
         double height = 0;
         int steps = 0;
         int heartRate = 0;
         LocalDate date = null;
-        List<HealthData> healthDataArr = new ArrayList<>();
+        List<HealthData> healthDataList = new ArrayList<>();
 
         // Prepare the SQL query
         String query = "SELECT * FROM health_data WHERE user_id = ?;";
@@ -110,7 +110,7 @@ public class HealthDataDao {
                 heartRate = resultSet.getInt("heart_rate");
                 date = resultSet.getDate("date").toLocalDate();
 
-                healthDataArr.add(new HealthData(weight, height, steps, heartRate, date));
+                healthDataList.add(new HealthData(weight, height, steps, heartRate, date));
             }
 
             resultSet.close();
@@ -118,11 +118,11 @@ public class HealthDataDao {
             System.out.println(e.getMessage());
         }
 
-        return healthDataArr;
+        return healthDataList;
     }
   
     // Define method to update the health data by id
-    public boolean updateHealthData(int id, User user, HealthData healthData) { 
+    public static boolean updateHealthData(int id, User user, HealthData healthData) { 
         boolean flag = false;
 
         // Prepare the SQL query
@@ -154,7 +154,7 @@ public class HealthDataDao {
     }
 
     // Define method to delete the health data from the database by id
-    public boolean deleteHealthData(int id) { 
+    public static boolean deleteHealthData(int id) { 
         boolean flag = false;
 
         // Prepare the SQL query

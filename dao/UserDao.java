@@ -5,11 +5,11 @@ import org.mindrot.jbcrypt.BCrypt;
 
 // Import requierd packages
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.sql.SQLException;
 
 // import custom packages
 import config.DatabaseConnection;
@@ -18,7 +18,7 @@ import model.User;
 // Define class
 public class UserDao {
     // Define method to insert user into the database 
-    public boolean createUser(User user) {
+    public static boolean createUser(User user) {
         boolean flag = false;
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         
@@ -49,7 +49,7 @@ public class UserDao {
     }
 
     // Define method to get user from database by id 
-    public User getUserById(int id) { 
+    public static User getUserById(int id) { 
         String firstName = null;
         String lastName = null;
         LocalDate birthDate = null;
@@ -88,7 +88,7 @@ public class UserDao {
     }
 
     // Define method to get user from the database by email
-    public User getUserByEmail(String user_email) { 
+    public static User getUserByEmail(String user_email) { 
         String firstName = null;
         String lastName = null;
         LocalDate birthDate = null;
@@ -127,7 +127,7 @@ public class UserDao {
     }
 
     // Define method to update the user by id
-    public boolean updateUser(int id, User user) {
+    public static boolean updateUser(int id, User user) {
         boolean flag = false;
 
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
@@ -160,7 +160,7 @@ public class UserDao {
     }
 
     // Define method to delete the user from the database by id
-    public boolean deleteUser(int id) {
+    public static boolean deleteUser(int id) {
         boolean flag = false;
 
         // Prepare the SQL query        
@@ -211,7 +211,7 @@ public class UserDao {
     }
 
     // Define method to verify the user's password
-    public boolean verifyPassword (String email, String password) {
+    public static boolean verifyPassword (String email, String password) {
         String hashedPassword = null;
 
         // Prepare the SQL query

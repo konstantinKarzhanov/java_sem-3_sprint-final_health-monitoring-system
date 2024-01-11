@@ -1,357 +1,157 @@
 // Import required packages
-import java.time.LocalDate;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.InputMismatchException;
 
 // Import custom packages
 import dao.*;
 import model.*;
-import util.RecommendationSystem;
+import views.*;
 
 // Define class
 public class HealthMonitoringApp {
-    private static UserDao uDAO = new UserDao();
-    private static DoctorPortalDao dpDAO = new DoctorPortalDao();
-    private static HealthDataDao hDAO = new HealthDataDao();
-    private static RecommendationSystem rSystem = new RecommendationSystem();
-    private static RecommendationDao rDAO = new RecommendationDao();
-    private static MedicineReminderDao mrDAO = new MedicineReminderDao();
-    private static User loggedInUser = null;
-    private static boolean loggedInUserIsDoctor = false;
-
-    // Define method to generate header   
-    public static void generateHeader(String header) {
-        System.out.println("");
-        System.out.printf("%s\n", "*".repeat(header.length() + 1));
-        System.out.println(header);
-        System.out.printf("%s\n", "*".repeat(header.length() + 1));
-    }
-
-    // Define method to generate menu
-    public static void generateMenu(String header, String[] menuArr, boolean goback) {
-        generateHeader(header);
-
-        System.out.println("Choose the option:\n");
-        for (int i = 1; i <= menuArr.length; i++) {
-            System.out.printf("%d. %s\n", i, menuArr[i - 1]);
-        }
-
-        if (goback) {
-            System.out.println("");
-            System.out.println("(Go back: -1)");
-            System.out.println("");
-        }
-
-        System.out.println("0. Exit\n");
-    }
-
-    // Define method to register user
-    public static User registerUser(Scanner inScanner) throws InputMismatchException, Exception {
-        // Define required variables
-        String firstName = null;
-        String lastName = null;
-        LocalDate birthDate = null;
-        char gender = '\0';
-        String email = null;
-        String password = null;
-        boolean isDoctor = false;
-        String medicalLicenseNumber = null;
-        String specialization = null;
-        double experienceYears = 0;
-        User user = null;
-        Doctor doctor = null;
-
-        // Assign variables from user input
-        System.out.println("Enter First Name:");
-        firstName = inScanner.nextLine();
-        // inScanner.nextLine();
-
-        System.out.println("Enter Last Name:");
-        lastName = inScanner.nextLine();
-        // inScanner.nextLine();
-
-        System.out.println("Enter the birth year:");
-        int birthYear = inScanner.nextInt();
-        inScanner.nextLine();
-
-        System.out.println("Enter the birth month:");
-        int birthMonth = inScanner.nextInt();
-        inScanner.nextLine();
-
-        System.out.println("Enter the birth day:");
-        int birthDay = inScanner.nextInt();
-        inScanner.nextLine();
-
-        birthDate = LocalDate.of(birthYear, birthMonth, birthDay);
-
-        System.out.println("Enter gender:");
-        gender = inScanner.next().charAt(0);
-        inScanner.nextLine();
-
-        System.out.println("Enter email address:");
-        email = inScanner.next();
-        inScanner.nextLine();
-
-        System.out.println("Enter password for Health Monitoring App:");
-        password = inScanner.nextLine();
-        // inScanner.nextLine();
-
-        System.out.println("Are you a doctor? (Yes / No):");
-        isDoctor = inScanner.next().toLowerCase().charAt(0) == 'y';
-        inScanner.nextLine();
-
-        // Assign variables from doctor input
-        if (isDoctor) {
-            System.out.println("Enter your medical license number:");
-            medicalLicenseNumber = inScanner.next();
-            inScanner.nextLine();
-
-            System.out.println("Enter your specialization:");
-            specialization = inScanner.nextLine();
-            // inScanner.nextLine();
-
-            System.out.println("Enter the number of years of experience:");
-            experienceYears = inScanner.nextDouble();
-            inScanner.nextLine();
-        }
-        
-        // Create new user/doctor
-        user = new User(firstName, lastName, birthDate, gender, email, password, isDoctor);
-
-        // Add user to the database
-        uDAO.createUser(user);
-
-        if (isDoctor){
-            doctor = new Doctor(user, medicalLicenseNumber, specialization, experienceYears);
-            dpDAO.createDoctor(doctor);
-        }
-
-        return user;
-    }
-
-    // Define method to login the user
-    public static boolean loginUser(String email, String password) {
-        boolean flag = false;
-        User user = uDAO.getUserByEmail(email);
-
-        if (user.getFirstName() == null) {
-            System.out.printf("User with email \"%s\" wasn't found\n", email);
-        } else if (uDAO.verifyPassword(email, password)) {
-            loggedInUser = user;
-            loggedInUserIsDoctor = user.isDoctor();
-
-            System.out.printf("Logged in as: \"%s %s\"\n", user.getFirstName(), user.getLastName());
-
-            flag = true;
-        } else {
-            System.out.println("Incorrect password. Try again");
-        }
-
-        return flag;
-    }
+    // Define attributes
+    private static User loggedUser = null;
+    private static int optionChoice = 0;
 
     public static void main(String[] args) {
-        // Define required variables
+        // Set scanner
         Scanner inScanner = new Scanner(System.in);
 
-        int optionChoice = 0;
-        boolean isLoggedIn = false;
-        
-        String welcomeHeader = "Welcome to Health Monitoring App";
-        String[] welcomeMenuArr = new String[2];
-        
-        welcomeMenuArr[0] = "Register a new user";
-        welcomeMenuArr[1] = "Log in the user";
+        // Define required menu
+        Menu welcomeMenu = new Menu(
+            "Welcome to Health Monitoring App", 
+            new String[] { 
+                "Register a new user", 
+                "Log in the user"
+            }
+        );
 
-        String mainHeader = "Health Monitoring App";
-        String[] mainMenuArr = new String[6];
+        Menu mainMenu = new Menu(
+            "Health Monitoring App",
+            new String[] {
+                "Add health data",
+                "Generate recommendations",
+                "Add a medicine reminder",
+                "Get reminders for a specific user",
+                "Get due reminders for a specific user",
+                "Test doctor portal"
+            }
+        );
 
-        mainMenuArr[0] = "Add health data";
-        mainMenuArr[1] = "Generate recommendations";
-        mainMenuArr[2] = "Add a medicine reminder";
-        mainMenuArr[3] = "Get reminders for a specific user";
-        mainMenuArr[4] = "Get due reminders for a specific user";
-        mainMenuArr[5] = "Test doctor portal";
-
-        String doctorPortalHeader = "Doctor Portal";
-        String[] doctorPortalMenuArr = new String[3];
-
-        doctorPortalMenuArr[0] = "Get doctor by id";
-        doctorPortalMenuArr[1] = "Get patients associated with a doctor";
-        doctorPortalMenuArr[2] = "Get health data for a specific patient";
+        Menu doctorPortalMenu = new Menu(
+            "Doctor Portal",
+            new String[] { 
+                "Get doctor by id",
+                "Get patients associated with a doctor",
+                "Get health data for a specific patient"
+            }
+        );
 
         // Display welcome menu
-        generateMenu(welcomeHeader, welcomeMenuArr, false);
+        welcomeMenu.getFormattedMenu(false);
 
         try {
             optionChoice = inScanner.nextInt();
             inScanner.nextLine();
 
-            if (optionChoice != 0) generateHeader(welcomeMenuArr[optionChoice - 1]);
+            if (optionChoice != 0) welcomeMenu.getFormattedHeader(optionChoice - 1);
 
             switch (optionChoice) {
                 case 1:
                     // Register a new user
-                    User user = registerUser(inScanner);
-
-                    System.out.printf("\n\"%s %s\" is now in the system.\n", user.getFirstName(), user.getLastName());
-                    System.out.println("To use the app login with your credentials\n");
+                    UserManagementView.registerUser(inScanner);
         
                     break;
                 case 2:
-                    // Login a user
-                    System.out.println("Enter your email:");
-                    String email = inScanner.next();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter your password:");
-                    String password = inScanner.nextLine();
-                    // inScanner.nextLine();
-
-                    isLoggedIn = loginUser(email, password);
+                    // Log in a user
+                    if (UserManagementView.loginUser(inScanner)) {
+                        loggedUser = UserManagementView.getLoggedUser();
+                    }
 
                     break;
                 case 0:
-                default:
-                    System.out.println("See you next time!");
+                default:                    
                     break;
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Something went wrong. Please try again using correct data for inputs\n");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        // Check if user is logged
-        if (!isLoggedIn) return;
+            // Check if user is logged in
+            if (loggedUser == null) {
+                System.out.println("To use the app login with your credentials\n");
+                inScanner.close();
 
-        // Display main menu
-        generateMenu(mainHeader, mainMenuArr, false);
+                return;
+            };
 
-        try {
+            // Display main menu
+            mainMenu.getFormattedMenu(false);
+
             optionChoice = inScanner.nextInt();
             inScanner.nextLine();
 
-            if (optionChoice != 0) generateHeader(mainMenuArr[optionChoice - 1]);
+            if (optionChoice != 0) mainMenu.getFormattedHeader(optionChoice - 1);
+
+            String message = null;
 
             switch (optionChoice) {
                 case 1:
                     // Add health data
-                    System.out.println("Enter your current weight:");
-                    double weight = inScanner.nextDouble();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter your current height:");
-                    double height = inScanner.nextDouble();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter number of steps you've walked:");
-                    int steps = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter your current heart rate:");
-                    int heartRate = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    HealthData healthDataLoggedInUser = new HealthData(weight, height, steps, heartRate, LocalDate.now());
+                    HealthData healthData = HealthDataView.addHealthData(inScanner);
                     
                     // Create recommendations
-                    List<String> recommendationArr = rSystem.generateRecommendations(healthDataLoggedInUser);
+                    List<String> recommendationList = Recommendation.generateRecommendationList(healthData);
+
+                    message = 
+                        HealthDataDao.createHealthData(loggedUser, healthData) && RecommendationDao.createRecommendation(loggedUser, recommendationList) 
+                        ? "\nHealth data with recommendations for \"%s %s\" was saved successfully\n\n" 
+                        : "\nSomething went wrong. Health data for \"%s %s\" wasn't saved\n";
                     
-                    if (hDAO.createHealthData(loggedInUser, healthDataLoggedInUser) && rDAO.createRecommendation(loggedInUser, recommendationArr)) {
-                        System.out.printf("\nHealth data with recommendations for \"%s %s\" was saved successfully\n\n", loggedInUser.getFirstName(), loggedInUser.getLastName());
-                    } else {
-                        System.out.printf("\nSomething went wrong. Health data for \"%s %s\" wasn't saved\n", loggedInUser.getFirstName(), loggedInUser.getLastName());
-                    };
-                    
+                    System.out.printf(message, loggedUser.getFirstName(), loggedUser.getLastName());
+
                     break;
                 case 2:
                     // Generate recommendations
-                    System.out.printf("\nRecommendations for: \"%s %s\"\n", loggedInUser.getFirstName(), loggedInUser.getLastName());
+                    System.out.printf("\nRecommendations for: \"%s %s\"\n", loggedUser.getFirstName(), loggedUser.getLastName());
 
-                    for (String recommendation : rDAO.getRecommendation(loggedInUser)) {
+                    for (String recommendation : RecommendationDao.getRecommendation(loggedUser)) {
                         System.out.printf("\n%s\n", recommendation);
                     }
+
                     System.out.println("\n");
 
                     break;
                 case 3:
-                    String medicineName = null;
-                    String dosage = null;
-                    String schedule = null;
-                    LocalDate startDate = null;
-                    LocalDate endDate = null;
-
                     // Add a medicine reminder
-                    System.out.println("Enter the medicine name:");
-                    medicineName = inScanner.nextLine();
-                    // inScanner.nextLine();
-
-                    System.out.println("Enter the dosage:");
-                    dosage = inScanner.nextLine();
-                    // inScanner.nextLine();
-
-                    System.out.println("Enter the schedule:");
-                    schedule = inScanner.nextLine();
-                    // inScanner.nextLine();
-
-                    // Enter the start date
-                    System.out.println("Enter the start date year:");
-                    int startDateYear = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter the start date month:");
-                    int startDateMonth = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter the start date day:");
-                    int startDateDay = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    startDate = LocalDate.of(startDateYear, startDateMonth, startDateDay);
-                    
-                    // Enter the end date
-                    System.out.println("Enter the end date year:");
-                    int endDateYear = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter the end date month:");
-                    int endDateMonth = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    System.out.println("Enter the end date day:");
-                    int endDateDay = inScanner.nextInt();
-                    inScanner.nextLine();
-
-                    endDate = LocalDate.of(endDateYear, endDateMonth, endDateDay);
+                    MedicineReminder medicineReminder = MedicineReminderView.addMedicineReminder(inScanner);
 
                     // Create medicine reminder
-                    if (mrDAO.createReminder(loggedInUser, new MedicineReminder(medicineName, dosage, schedule, startDate, endDate))) {
-                        System.out.printf("\nMedicine reminder for \"%s %s\" was saved successfully\n\n", loggedInUser.getFirstName(), loggedInUser.getLastName());
-                    } else {
-                        System.out.printf("\nSomething went wrong. Medicine reminder for \"%s %s\" wasn't saved\n", loggedInUser.getFirstName(), loggedInUser.getLastName());
-                    };
+                    message = 
+                        MedicineReminderDao.createReminder(loggedUser, medicineReminder)
+                        ? "\nMedicine reminder for \"%s %s\" was saved successfully\n\n" 
+                        : "\nSomething went wrong. Medicine reminder for \"%s %s\" wasn't saved\n";
+                    
+                    System.out.printf(message, loggedUser.getFirstName(), loggedUser.getLastName());
 
                     break;
                 case 4:
-                    List<MedicineReminder> reminderArr = null;
+                    List<MedicineReminder> reminderList = null;
 
                     // Get reminders based on condition
-                    if (loggedInUserIsDoctor) {
+                    if (loggedUser.isDoctor()) {
                         // Get reminders for a specific user
                         System.out.println("Enter the user id to get medicine reminders for a specific user:");
                         int userId = inScanner.nextInt();
                         inScanner.nextLine();
 
-                        reminderArr = mrDAO.getRemindersByUserId(userId);
+                        reminderList = MedicineReminderDao.getRemindersByUserId(userId);
                     } else {
                         // Get personal reminders
-                        reminderArr = mrDAO.getRemindersByUser(loggedInUser);
+                        reminderList = MedicineReminderDao.getRemindersByUser(loggedUser);
                     }
 
-                    for (int i = 1; i <= reminderArr.size(); i++) {
-                        MedicineReminder reminder = reminderArr.get(i - 1);
+                    for (int i = 1; i <= reminderList.size(); i++) {
+                        MedicineReminder reminder = reminderList.get(i - 1);
 
                         String reminderMedicineName = reminder.getMedicineName();
                         String reminderDosage = reminder.getDosage();
@@ -366,28 +166,28 @@ public class HealthMonitoringApp {
                     break;
                 case 5:
                     // Get DUE reminders for a specific user
-                    List<MedicineReminder> dueReminderArr = null;
+                    List<MedicineReminder> dueReminderList = null;
 
                     // Get DUE reminders based on condition
-                    if (loggedInUserIsDoctor) {
+                    if (loggedUser.isDoctor()) {
                         // Get DUE reminders for a specific user
                         System.out.println("Enter the user id to get medicine DUE reminders for a specific user:");
                         int userId = inScanner.nextInt();
                         inScanner.nextLine();
 
-                        dueReminderArr = mrDAO.getDueReminders(userId);
+                        dueReminderList = MedicineReminderDao.getDueReminders(userId);
                     } else {
                         // Get personal DUE reminders
-                        dueReminderArr = mrDAO.getDueReminders(loggedInUser);
+                        dueReminderList = MedicineReminderDao.getDueReminders(loggedUser);
                     }
 
-                    if (dueReminderArr.size() == 0) {
+                    if (dueReminderList.size() == 0) {
                         System.out.println("There are no due reminders yet\n");
                         break;
                     }
 
-                    for (int i = 1; i <= dueReminderArr.size(); i++) {
-                        MedicineReminder reminder = dueReminderArr.get(i - 1);
+                    for (int i = 1; i <= dueReminderList.size(); i++) {
+                        MedicineReminder reminder = dueReminderList.get(i - 1);
 
                         String reminderMedicineName = reminder.getMedicineName();
                         String reminderDosage = reminder.getDosage();
@@ -402,28 +202,29 @@ public class HealthMonitoringApp {
                     break;
                 case 6:
                     // Test doctor portal
-                    if (!loggedInUserIsDoctor) {
+                    if (!loggedUser.isDoctor()) {
                         System.out.println("\nDoctor portal functionality available only for doctors");
                         System.out.println("Try to login as a doctor\n");
                         break;
                     };
                     
                     // Display Doctor Portal menu
-                    generateMenu(doctorPortalHeader, doctorPortalMenuArr, false);
+                    doctorPortalMenu.getFormattedMenu(false);
                     
                     optionChoice = inScanner.nextInt();
                     inScanner.nextLine();
 
-                    if (optionChoice != 0) generateHeader(doctorPortalMenuArr[optionChoice - 1]);
+                    if (optionChoice != 0) doctorPortalMenu.getFormattedHeader(optionChoice - 1);
 
+                    int doctorId = 0;
                     switch (optionChoice) {
                         case 1:
                             // Get doctor by id
                             System.out.println("Enter the doctor id:");
-                            int doctorId = inScanner.nextInt();
+                            doctorId = inScanner.nextInt();
                             inScanner.nextLine();
                             
-                            Doctor doctor = dpDAO.getDoctorById(doctorId);
+                            Doctor doctor = DoctorPortalDao.getDoctorById(doctorId);
                             
                             if (doctor.getFirstName() == null || doctor.getMedicalLicenseNumber() == null) {
                                 System.out.printf("Doctor with id \"%d\" wasn't found\n", doctorId);
@@ -447,18 +248,19 @@ public class HealthMonitoringApp {
                         case 2:
                             // Get patients associated with a doctor
                             System.out.println("Enter the doctor id:");
-                            int docId = inScanner.nextInt();
+                            doctorId = inScanner.nextInt();
                             inScanner.nextLine();
                             
-                            List<User> patientArr = dpDAO.getPatientsByDoctorId(docId);
+                            List<User> patientList = DoctorPortalDao.getPatientsByDoctorId(doctorId);
 
-                            if (patientArr.size() == 0) {
-                                System.out.printf("Doctor with id \"%d\" does not have patients yet\n", docId);
+                            if (patientList.size() == 0) {
+                                System.out.printf("Doctor with id \"%d\" does not have patients yet\n", doctorId);
                                 break;
-
                             } 
-                            System.out.printf("Doctor \"%d\", patients:\n", docId);
-                            for (User patient : patientArr) {
+
+                            System.out.printf("Doctor \"%d\", patients:\n", doctorId);
+
+                            for (User patient : patientList) {
                                 // Display patient's info
                                 System.out.println("Patient:");
                                 System.out.printf("First Name: \"%s\"\n", patient.getFirstName());
@@ -477,38 +279,38 @@ public class HealthMonitoringApp {
                             int patientId = inScanner.nextInt();
                             inScanner.nextLine();
 
-                            List<HealthData> healthDataArr = dpDAO.getHealthDataByPatientId(patientId);
+                            List<HealthData> healthDataList = DoctorPortalDao.getHealthDataByPatientId(patientId);
 
                             System.out.printf("Patient: \"%d\"\n", patientId);
-                            for (HealthData healthData : healthDataArr) {
+                            for (HealthData hData : healthDataList) {
                                 // Display patient's info
-                                System.out.printf("Weight: \"%s\"\n", healthData.getWeight());
-                                System.out.printf("Height: \"%s\"\n", healthData.getHeight());
-                                System.out.printf("Steps: \"%s\"\n", healthData.getSteps());
-                                System.out.printf("Heart Rate: \"%s\"\n", healthData.getHeartRate());
-                                System.out.printf("Date: \"%s\"\n", healthData.getDate());
+                                System.out.printf("Weight: \"%s\"\n", hData.getWeight());
+                                System.out.printf("Height: \"%s\"\n", hData.getHeight());
+                                System.out.printf("Steps: \"%s\"\n", hData.getSteps());
+                                System.out.printf("Heart Rate: \"%s\"\n", hData.getHeartRate());
+                                System.out.printf("Date: \"%s\"\n", hData.getDate());
                                 System.out.println("");
                             }
 
                             break;
                         case 0:
                         default:
-                            System.out.println("See you next time!");
                             break;
                     }
 
                     break;
                 case 0:
                 default:
-                    System.out.println("See you next time!");
                     break;
             }
+            
+            System.out.println("See you next time!");
         } catch (InputMismatchException e) {
             System.out.println("Something went wrong. Please try again using correct data for inputs\n");
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            inScanner.close();
         }
-
-        inScanner.close();
     }
 }
