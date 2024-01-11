@@ -35,14 +35,14 @@ public class Menu {
     }
 
     // Define method to get formatted header
-    public void getFormattedHeader() {
+    public void displayHeader() {
         System.out.println("");
         System.out.println("*".repeat(this.header.length() + 1));
         System.out.println(this.header);
         System.out.println("*".repeat(this.header.length() + 1));
     }
 
-    public void getFormattedHeader(int menuArrItem) {
+    public void displayHeader(int menuArrItem) {
         System.out.println("");
         System.out.println("*".repeat(this.menuArr[menuArrItem].length() + 1));
         System.out.println(this.menuArr[menuArrItem]);
@@ -50,8 +50,10 @@ public class Menu {
     }
 
     // Define method to get formatted menu
-    public void getFormattedMenu(boolean goBackOption) {
-        this.getFormattedHeader();
+    public void displayMenu(boolean goBackOption) {
+        this.displayHeader();
+
+        if (this.menuArr == null) return;
 
         System.out.println("Choose the option:\n");
         for (int i = 1; i <= this.menuArr.length; i++) {

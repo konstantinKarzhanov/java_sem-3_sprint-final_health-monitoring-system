@@ -16,10 +16,7 @@ public class HealthMonitoringApp {
     private static int optionChoice = 0;
 
     public static void main(String[] args) {
-        // Set scanner
-        Scanner inScanner = new Scanner(System.in);
-
-        // Define required menu
+        // Define required menus
         Menu welcomeMenu = new Menu(
             "Welcome to Health Monitoring App", 
             new String[] { 
@@ -50,13 +47,13 @@ public class HealthMonitoringApp {
         );
 
         // Display welcome menu
-        welcomeMenu.getFormattedMenu(false);
+        welcomeMenu.displayMenu(false);
 
-        try {
+        try(Scanner inScanner = new Scanner(System.in)) {
             optionChoice = inScanner.nextInt();
             inScanner.nextLine();
 
-            if (optionChoice != 0) welcomeMenu.getFormattedHeader(optionChoice - 1);
+            if (optionChoice != 0) welcomeMenu.displayHeader(optionChoice - 1);
 
             switch (optionChoice) {
                 case 1:
@@ -85,12 +82,12 @@ public class HealthMonitoringApp {
             };
 
             // Display main menu
-            mainMenu.getFormattedMenu(false);
+            mainMenu.displayMenu(false);
 
             optionChoice = inScanner.nextInt();
             inScanner.nextLine();
 
-            if (optionChoice != 0) mainMenu.getFormattedHeader(optionChoice - 1);
+            if (optionChoice != 0) mainMenu.displayHeader(optionChoice - 1);
 
             String message = null;
 
@@ -209,12 +206,12 @@ public class HealthMonitoringApp {
                     };
                     
                     // Display Doctor Portal menu
-                    doctorPortalMenu.getFormattedMenu(false);
+                    doctorPortalMenu.displayMenu(false);
                     
                     optionChoice = inScanner.nextInt();
                     inScanner.nextLine();
 
-                    if (optionChoice != 0) doctorPortalMenu.getFormattedHeader(optionChoice - 1);
+                    if (optionChoice != 0) doctorPortalMenu.displayHeader(optionChoice - 1);
 
                     int doctorId = 0;
                     switch (optionChoice) {
@@ -309,8 +306,6 @@ public class HealthMonitoringApp {
             System.out.println("Something went wrong. Please try again using correct data for inputs\n");
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            inScanner.close();
         }
     }
 }
