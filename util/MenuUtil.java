@@ -15,56 +15,36 @@ import model.Menu;
 import model.User;
 
 public class MenuUtil {
-	// Define attributes
-	public static final Menu WELCOME_MENU = new Menu(
-		"Welcome to Health Monitoring App", 
-		new String[] { 
-			"Register a new user", 
-			"Log in the user"
-		}
-	);
+	private static int chosenOption = 0;
 
-	public static final Menu MAIN_MENU = new Menu(
-		"Health Monitoring App",
-		new String[] {
-			"Add health data",
-			"Generate recommendations",
-			"Add a medicine reminder",
-			"Get reminders for a specific user",
-			"Get due reminders for a specific user",
-			"Test doctor portal"
-		}
-	);
-
-	private static final Menu DOCTOR_PORTAL_MENU = new Menu(
-			"Doctor Portal",
-			new String[] { 
-				"Get doctor by id",
-				"Get patients associated with a doctor",
-				"Get health data for a specific patient"
-			}
-		);
+	public static int getChosenOption() {
+		return chosenOption;
+	}
 	
     // Define method to process menu choice   
-    public static int handleMenuChoice(Menu menu, Scanner inScanner) throws InputMismatchException {
-        int optionChoice = 0;
-
-        // Display menu
+    private static void processMenu(Menu menu, Scanner inScanner) throws InputMismatchException {
         menu.displayMenu();
 
-        optionChoice = inScanner.nextInt();
+        chosenOption = inScanner.nextInt();
         inScanner.nextLine();
 
-        if (optionChoice != 0) menu.displayHeader(optionChoice - 1);
-
-        return optionChoice;
+        if (chosenOption != 0) menu.displayHeader(chosenOption - 1);
     }
 
     // Define method to handle welcome menu choice
-    public static boolean processWelcomeMenuChoice(int optionChoice, Scanner inScanner) throws InputMismatchException, SQLException {
+    public static boolean processWelcomeMenu(Scanner inScanner) throws InputMismatchException, SQLException {
         boolean userIsLoggedIn = false;
+		Menu welcomeMenu = new Menu(
+			"Welcome to Health Monitoring App", 
+			new String[] { 
+				"Register a new user", 
+				"Log in the user"
+			}
+		);
 
-		switch (optionChoice) {
+		processMenu(welcomeMenu, inScanner);
+
+		switch (chosenOption) {
             case 1:
                 // Register a new user
                 UserManagementUtil.registerUser(inScanner);
@@ -84,10 +64,20 @@ public class MenuUtil {
     }
 
     // Define method to handle doctor portal menu choice
-    private static void processDoctorPortalMenuChoice(int optionChoice, Scanner inScanner) throws InputMismatchException, SQLException {
-        int doctorId = 0;
+    private static void processDoctorPortalMenu(Scanner inScanner) throws InputMismatchException, SQLException {
+		Menu doctorPortalMenu = new Menu(
+			"Doctor Portal",
+			new String[] { 
+				"Get doctor by id",
+				"Get patients associated with a doctor",
+				"Get health data for a specific patient"
+			}
+		);
 
-        switch (optionChoice) {
+		processMenu(doctorPortalMenu, inScanner);
+		
+		int doctorId = 0;
+        switch (chosenOption) {
             case 1:
                 // Get doctor by id
                 System.out.println("Enter the doctor id:");
@@ -177,13 +167,26 @@ public class MenuUtil {
 		};
 		
 		// Display Doctor Portal menu
-		int optionChoice = handleMenuChoice(DOCTOR_PORTAL_MENU, inScanner);
-		processDoctorPortalMenuChoice(optionChoice, inScanner);
+		processDoctorPortalMenu(inScanner);
 	}
 
     // Define method to handle main menu choice
-    public static void processMainMenuChoice(int optionChoice, Scanner inScanner) throws InputMismatchException, SQLException {
-        switch (optionChoice) {
+    public static void processMainMenu(Scanner inScanner) throws InputMismatchException, SQLException {
+		Menu mainMenu = new Menu(
+			"Health Monitoring App",
+			new String[] {
+				"Add health data",
+				"Generate recommendations",
+				"Add a medicine reminder",
+				"Get reminders for a specific user",
+				"Get due reminders for a specific user",
+				"Test doctor portal"
+			}
+		);
+
+		processMenu(mainMenu, inScanner);
+		
+		switch (chosenOption) {
             case 1:
                 HealthDataAndRecommendationUtil.processHealthDataAndRecommendationList(inScanner);
                 break;

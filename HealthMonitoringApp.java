@@ -7,21 +7,17 @@ import java.util.Scanner;
 import util.*;
 
 public class HealthMonitoringApp {
-    private static int optionChoice = 0;
-    
     public static void main(String[] args) {
         try (Scanner inScanner = new Scanner(System.in)) {
             do {
-                optionChoice = MenuUtil.handleMenuChoice(MenuUtil.WELCOME_MENU, inScanner);
-                boolean userIsLoggedIn = MenuUtil.processWelcomeMenuChoice(optionChoice, inScanner);
+                boolean userIsLoggedIn = MenuUtil.processWelcomeMenu(inScanner);
 
                 if (userIsLoggedIn) {
-                    optionChoice = MenuUtil.handleMenuChoice(MenuUtil.MAIN_MENU, inScanner);
-                    MenuUtil.processMainMenuChoice(optionChoice, inScanner);
+                    MenuUtil.processMainMenu(inScanner);
                 } else {
                     System.out.println("To use the app login with your credentials\n");
                 }
-            } while (optionChoice != 0);
+            } while (MenuUtil.getChosenOption() != 0);
 
             System.out.println("See you next time!");
         } catch (InputMismatchException | ArrayIndexOutOfBoundsException e) {
