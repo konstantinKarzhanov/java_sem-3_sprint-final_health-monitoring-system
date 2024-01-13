@@ -4,21 +4,21 @@ package dao;
 import org.mindrot.jbcrypt.BCrypt;
 
 // Import requierd packages
+import java.sql.Date;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 // import custom packages
 import config.DatabaseConnection;
 import model.User;
 
-// Define class
+
 public class UserDao {
     // Define method to insert user into the database 
-    public static boolean createUser(User user) {
+    public static boolean createUser(User user) throws SQLException {
         boolean flag = false;
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         
@@ -41,15 +41,13 @@ public class UserDao {
             statement.executeUpdate();
 
             flag = true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return flag;
     }
 
     // Define method to get user from database by id 
-    public static User getUserById(int id) { 
+    public static User getUserById(int id) throws SQLException { 
         String firstName = null;
         String lastName = null;
         LocalDate birthDate = null;
@@ -80,15 +78,13 @@ public class UserDao {
             }
 
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return new User(firstName, lastName, birthDate, gender, email, password, isDoctor);
     }
 
     // Define method to get user from the database by email
-    public static User getUserByEmail(String user_email) { 
+    public static User getUserByEmail(String user_email) throws SQLException { 
         String firstName = null;
         String lastName = null;
         LocalDate birthDate = null;
@@ -119,15 +115,13 @@ public class UserDao {
             }
 
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return new User(firstName, lastName, birthDate, gender, email, password, isDoctor);
     }
 
     // Define method to update the user by id
-    public static boolean updateUser(int id, User user) {
+    public static boolean updateUser(int id, User user) throws SQLException {
         boolean flag = false;
 
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
@@ -152,15 +146,13 @@ public class UserDao {
             statement.executeUpdate();
 
             flag = true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return flag;
     }
 
     // Define method to delete the user from the database by id
-    public static boolean deleteUser(int id) {
+    public static boolean deleteUser(int id) throws SQLException {
         boolean flag = false;
 
         // Prepare the SQL query        
@@ -186,16 +178,16 @@ public class UserDao {
 
             flag = true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-
             if (dbConnection != null) {
                 try {
                     // Rollback transaction       
                     dbConnection.rollback();
                 } catch (SQLException rollbackE) {
-                    System.out.println(rollbackE.getMessage());
+                    throw rollbackE;
                 }
             }
+
+            throw e;
         } finally {
             // Set auto-commit mode to default state
             try {
@@ -203,7 +195,7 @@ public class UserDao {
 
                 if (dbConnection != null) dbConnection.close();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                throw e;
             }
         }
 
@@ -211,7 +203,7 @@ public class UserDao {
     }
 
     // Define method to verify the user's password
-    public static boolean verifyPassword (String email, String password) {
+    public static boolean verifyPassword (String email, String password) throws SQLException {
         String hashedPassword = null;
 
         // Prepare the SQL query
@@ -230,8 +222,6 @@ public class UserDao {
             }
 
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         // Check if password is correct and return true/false

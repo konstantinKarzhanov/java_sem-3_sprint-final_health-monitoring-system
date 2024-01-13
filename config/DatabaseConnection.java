@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-// Define class
 public class DatabaseConnection {
     // Define attributes
     private static final String URL = "jdbc:postgresql://localhost:5432/healthMonitoringSystem";
@@ -18,7 +17,7 @@ public class DatabaseConnection {
         
         try {
             // use Postgres Driver
-            // Class.forName("org.postgresql.Driver"); // in this case need to catch "ClassNotFoundException" as well
+            // Class.forName("org.postgresql.Driver"); // in this case we will need to catch "ClassNotFoundException" as well
             dbConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (SQLException e) {
             System.out.println(e.getMessage());

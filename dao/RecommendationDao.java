@@ -4,19 +4,19 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.List;
-import java.util.ArrayList;
-import java.time.LocalDate;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 // import custom packages
 import config.DatabaseConnection;
 import model.User;
 
-// Define class
+
 public class RecommendationDao {
     // Define method to create recommendation in the database
-    public static boolean createRecommendation(User user, List<String> recommendationList) {
+    public static boolean createRecommendation(User user, List<String> recommendationList) throws SQLException {
         boolean flag = false;
 
         // Prepare the SQL query
@@ -39,15 +39,13 @@ public class RecommendationDao {
             }
             
             flag = true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return flag;
     }
 
     // Define method to get recommendation from the database for a specific user
-    public static List<String> getRecommendation(User user) {
+    public static List<String> getRecommendation(User user) throws SQLException {
         List<String> recommendationList = new ArrayList<>();
         
         // Prepare the SQL query
@@ -69,9 +67,7 @@ public class RecommendationDao {
             }
 
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        } 
 
         return recommendationList;
     }

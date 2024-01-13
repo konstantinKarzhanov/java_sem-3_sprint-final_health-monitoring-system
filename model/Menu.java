@@ -1,6 +1,5 @@
 package model;
 
-// Define class
 public class Menu {
     // Define attributes
     private String header;
@@ -50,7 +49,7 @@ public class Menu {
     }
 
     // Define method to get formatted menu
-    public void displayMenu(boolean goBackOption) {
+    public void displayMenu() {
         this.displayHeader();
 
         if (this.menuArr == null) return;
@@ -58,12 +57,6 @@ public class Menu {
         System.out.println("Choose the option:\n");
         for (int i = 1; i <= this.menuArr.length; i++) {
             System.out.printf("%d. %s\n", i, menuArr[i - 1]);
-        }
-
-        if (goBackOption) {
-            System.out.println("");
-            System.out.println("(Go back: -1)");
-            System.out.println("");
         }
 
         System.out.println("0. Exit\n");

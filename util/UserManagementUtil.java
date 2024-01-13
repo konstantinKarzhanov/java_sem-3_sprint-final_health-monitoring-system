@@ -1,17 +1,19 @@
-package views;
+package util;
 
 // Import required packages
-import java.util.Scanner;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 // Import custom packages
 import model.*;
-import dao.UserDao;
 import dao.DoctorPortalDao;
+import dao.UserDao;
 
-// Define class
-public class UserManagementView {
-    public static User loggedUser = null;
+
+public class UserManagementUtil {
+    private static User loggedUser = null;
 
     // Define getter methods
     public static User getLoggedUser() {
@@ -19,7 +21,7 @@ public class UserManagementView {
     }
 
     // Define method to register new user
-    public static void registerUser(Scanner inScanner) throws Exception {
+    public static void registerUser(Scanner inScanner) throws InputMismatchException, SQLException {
         // Define required variables
         String firstName = null;
         String lastName = null;
@@ -101,7 +103,7 @@ public class UserManagementView {
     }
 
     // Define method to login the user
-    public static boolean loginUser(Scanner inScanner) throws Exception {
+    public static boolean loginUser(Scanner inScanner) throws InputMismatchException, SQLException {
         boolean flag = false;
 
         System.out.println("Enter your email:");

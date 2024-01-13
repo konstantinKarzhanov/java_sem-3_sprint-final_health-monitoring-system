@@ -4,20 +4,20 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
-import java.sql.SQLException;
 
 // import custom packages
 import config.DatabaseConnection;
-import model.User;
 import model.Doctor;
 import model.HealthData;
+import model.User;
 
-// Define class
+
 public class DoctorPortalDao {
     // Define method to insert doctor into the database 
-    public static boolean createDoctor(Doctor doctor) {
+    public static boolean createDoctor(Doctor doctor) throws SQLException {
         boolean flag = false;
         
         // Prepare the SQL query
@@ -38,15 +38,13 @@ public class DoctorPortalDao {
             statement.executeUpdate();
 
             flag = true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return flag;
     }
 
     // Define method to get doctor from the database by id
-    public static Doctor getDoctorById(int doctorId) {
+    public static Doctor getDoctorById(int doctorId) throws SQLException {
         String medicalLicenseNumber = null;
         String specialization = null;
         double experienceYears = 0;
@@ -69,15 +67,13 @@ public class DoctorPortalDao {
             }
 
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return new Doctor(UserDao.getUserById(doctorId), medicalLicenseNumber, specialization, experienceYears);
     }
 
     // Define method to get doctor's patient list from the database by doctor id
-    public static List<User> getPatientsByDoctorId(int doctorId) {
+    public static List<User> getPatientsByDoctorId(int doctorId) throws SQLException {
         int userId = 0;
         List<User> patientList = new ArrayList<>();
 
@@ -98,15 +94,13 @@ public class DoctorPortalDao {
             }
             
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return patientList;
     }
 
     // Define method to get health data by patient id
-    public static List<HealthData> getHealthDataByPatientId(int patientId) {
+    public static List<HealthData> getHealthDataByPatientId(int patientId) throws SQLException {
         return HealthDataDao.getHealthDataByUserId(patientId);
     }
 }

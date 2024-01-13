@@ -3,7 +3,7 @@ package model;
 // Import required packages
 import java.time.LocalDate;
 
-// Define class
+
 public class Doctor extends User {
     // Define attributes
     private String medicalLicenseNumber;
