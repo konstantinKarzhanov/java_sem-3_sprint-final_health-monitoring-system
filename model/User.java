@@ -1,7 +1,8 @@
+package model;
+
 // Import required packages
 import java.time.LocalDate;
 
-// Define class
 public class User {
     // Define attributes
     private String firstName;

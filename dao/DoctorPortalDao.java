@@ -1,3 +1,5 @@
+package dao;
+
 // Import required packages
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,20 +8,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
-// Define class
+// import custom packages
+import config.DatabaseConnection;
+import model.Doctor;
+import model.HealthData;
+import model.User;
+
 public class DoctorPortalDao {
-    // Define attributes
-    private UserDao userDao;
-    private HealthDataDao healthDataDao;
-
-    // Define constructors
-    public DoctorPortalDao() {
-        this.userDao = new UserDao();
-        this.healthDataDao = new HealthDataDao();
-    }
-
     // Define method to insert doctor into the database 
-    public boolean createDoctor(Doctor doctor) {
+    public static boolean createDoctor(Doctor doctor) throws SQLException {
         boolean flag = false;
         
         // Prepare the SQL query
@@ -40,15 +37,13 @@ public class DoctorPortalDao {
             statement.executeUpdate();
 
             flag = true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return flag;
     }
 
     // Define method to get doctor from the database by id
-    public Doctor getDoctorById(int doctorId) {
+    public static Doctor getDoctorById(int doctorId) throws SQLException {
         String medicalLicenseNumber = null;
         String specialization = null;
         double experienceYears = 0;
@@ -71,17 +66,15 @@ public class DoctorPortalDao {
             }
 
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
-        return new Doctor(this.userDao.getUserById(doctorId), medicalLicenseNumber, specialization, experienceYears);
+        return new Doctor(UserDao.getUserById(doctorId), medicalLicenseNumber, specialization, experienceYears);
     }
 
     // Define method to get doctor's patient list from the database by doctor id
-    public List<User> getPatientsByDoctorId(int doctorId) {
+    public static List<User> getPatientsByDoctorId(int doctorId) throws SQLException {
         int userId = 0;
-        List<User> patientArr = new ArrayList<>();
+        List<User> patientList = new ArrayList<>();
 
         // Prepare the SQL query
         String query = "SELECT * FROM doctor_patient WHERE doctor_id = ?;";
@@ -96,20 +89,18 @@ public class DoctorPortalDao {
 
             while (resultSet.next()) {
                 userId = resultSet.getInt("patient_id");
-                patientArr.add(this.userDao.getUserById(userId));
+                patientList.add(UserDao.getUserById(userId));
             }
             
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
-        return patientArr;
+        return patientList;
     }
 
     // Define method to get health data by patient id
-    public List<HealthData> getHealthDataByPatientId(int patientId) {
-        return healthDataDao.getHealthDataByUserId(patientId);
+    public static List<HealthData> getHealthDataByPatientId(int patientId) throws SQLException {
+        return HealthDataDao.getHealthDataByUserId(patientId);
     }
 }
 

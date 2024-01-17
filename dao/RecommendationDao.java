@@ -1,3 +1,5 @@
+package dao;
+
 // Import required packages
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,10 +9,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-// Define class
+// import custom packages
+import config.DatabaseConnection;
+import model.User;
+
 public class RecommendationDao {
     // Define method to create recommendation in the database
-    public boolean createRecommendation(User user, List<String> recommendationArr) {
+    public static boolean createRecommendation(User user, List<String> recommendationList) throws SQLException {
         boolean flag = false;
 
         // Prepare the SQL query
@@ -25,7 +30,7 @@ public class RecommendationDao {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
 
-            for (String recommendation : recommendationArr) {
+            for (String recommendation : recommendationList) {
                 statement.setString(3, recommendation);
                 statement.setObject(4, LocalDate.now());
 
@@ -33,16 +38,14 @@ public class RecommendationDao {
             }
             
             flag = true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return flag;
     }
 
     // Define method to get recommendation from the database for a specific user
-    public List<String> getRecommendation(User user) {
-        List<String> recommendationArr = new ArrayList<>();
+    public static List<String> getRecommendation(User user) throws SQLException {
+        List<String> recommendationList = new ArrayList<>();
         
         // Prepare the SQL query
         String selectIdQuery = "SELECT id FROM users WHERE first_name = ? AND last_name = ?";
@@ -59,14 +62,12 @@ public class RecommendationDao {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                recommendationArr.add(resultSet.getString("recommendation_text"));
+                recommendationList.add(resultSet.getString("recommendation_text"));
             }
 
             resultSet.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        } 
 
-        return recommendationArr;
+        return recommendationList;
     }
 }

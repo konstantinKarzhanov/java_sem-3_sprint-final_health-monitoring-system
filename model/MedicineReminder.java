@@ -1,7 +1,8 @@
+package model;
+
 // Import required packages
 import java.time.LocalDate;
 
-// Define class
 public class MedicineReminder {
     // Define attributes
     private String medicineName;
