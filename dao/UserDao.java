@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import config.DatabaseConnection;
 import model.User;
 
-
 public class UserDao {
     // Define method to insert user into the database 
     public static boolean createUser(User user) throws SQLException {

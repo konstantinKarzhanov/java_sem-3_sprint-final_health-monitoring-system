@@ -11,7 +11,6 @@ import model.*;
 import dao.DoctorPortalDao;
 import dao.UserDao;
 
-
 public class UserManagementUtil {
     private static User loggedUser = null;
 

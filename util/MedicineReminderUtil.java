@@ -12,7 +12,6 @@ import dao.MedicineReminderDao;
 import model.MedicineReminder;
 import model.User;
 
-
 public class MedicineReminderUtil {
     // Define method to add medicine reminder
     public static MedicineReminder addMedicineReminder(Scanner inScanner) throws InputMismatchException {

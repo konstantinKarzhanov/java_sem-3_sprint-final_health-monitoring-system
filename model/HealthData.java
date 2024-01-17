@@ -3,7 +3,6 @@ package model;
 // Import required packages
 import java.time.LocalDate;
 
-
 public class HealthData {
     // Define attributes
     private double weight;

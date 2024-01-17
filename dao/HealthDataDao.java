@@ -15,7 +15,6 @@ import config.DatabaseConnection;
 import model.HealthData;
 import model.User;
 
-
 public class HealthDataDao {
     // Define method to insert user's health data into the database 
     public static boolean createHealthData(User user, HealthData healthData) throws SQLException { 

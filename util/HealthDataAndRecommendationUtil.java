@@ -15,7 +15,6 @@ import model.HealthData;
 import model.Recommendation;
 import model.User;
 
-
 public class HealthDataAndRecommendationUtil {
     // Define method to add health data
     public static HealthData addHealthData(Scanner inScanner) throws InputMismatchException {

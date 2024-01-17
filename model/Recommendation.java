@@ -4,7 +4,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Recommendation {
     // Define attributes
     private static final int[] HEART_RATE_ARR = { 60, 100 };

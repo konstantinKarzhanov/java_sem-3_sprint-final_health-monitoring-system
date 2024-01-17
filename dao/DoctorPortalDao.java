@@ -14,7 +14,6 @@ import model.Doctor;
 import model.HealthData;
 import model.User;
 
-
 public class DoctorPortalDao {
     // Define method to insert doctor into the database 
     public static boolean createDoctor(Doctor doctor) throws SQLException {

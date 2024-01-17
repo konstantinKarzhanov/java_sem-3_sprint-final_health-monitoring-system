@@ -13,7 +13,6 @@ import java.util.List;
 import config.DatabaseConnection;
 import model.User;
 
-
 public class RecommendationDao {
     // Define method to create recommendation in the database
     public static boolean createRecommendation(User user, List<String> recommendationList) throws SQLException {

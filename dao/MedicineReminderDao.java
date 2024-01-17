@@ -15,7 +15,6 @@ import config.DatabaseConnection;
 import model.MedicineReminder;
 import model.User;
 
-
 public class MedicineReminderDao {
     // Define method to create reminder
     public static boolean createReminder(User user, MedicineReminder reminder) throws SQLException {
